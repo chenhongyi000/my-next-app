@@ -37,34 +37,19 @@ jobs:
           cp -r .next/static deploy-package/.next/
           cp -r public deploy-package/ 2>/dev/null || true
 
-      # 5. 写入 SSH 密钥并传输
-      - name: Deploy Package to Server
-        env:
-          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOST: ${{ secrets.SERVER_HOST }}
-          PORT: ${{ secrets.SERVER_PORT }}
+      # 5. 安装 sshpass + SCP 传输 + SSH 重启
+      - name: Deploy to Server
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
 
-          scp -P "${PORT:-22}" \
-            -i ~/.ssh/deploy_key \
+          SSHPASS='${{ secrets.SERVER_PASSWORD }}' sshpass -e scp \
             -o StrictHostKeyChecking=accept-new \
             -r deploy-package/* \
-            root@$HOST:/opt/nextjs-app/
+            '${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}':/opt/nextjs-app/
 
-      # 6. SSH 重启服务
-      - name: Restart App on Server
-        env:
-          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOST: ${{ secrets.SERVER_HOST }}
-          PORT: ${{ secrets.SERVER_PORT }}
-        run: |
-          ssh -p "${PORT:-22}" \
-            -i ~/.ssh/deploy_key \
+          SSHPASS='${{ secrets.SERVER_PASSWORD }}' sshpass -e ssh \
             -o StrictHostKeyChecking=accept-new \
-            root@$HOST \
+            '${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}' \
             '
               cd /opt/nextjs-app
 
