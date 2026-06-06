@@ -37,16 +37,29 @@ jobs:
           cp -r .next/static deploy-package/.next/
           cp -r public deploy-package/ 2>/dev/null || true
 
-      # 5. 安装 sshpass + SCP 传输 + SSH 重启
-      - name: Deploy to Server
-        run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
+      # 5. 安装 sshpass
+      - name: Install sshpass
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
 
+      # 6. SSH 创建目录并授权
+      - name: Prepare Server Directory
+        run: |
+          SSHPASS='${{ secrets.SERVER_PASSWORD }}' sshpass -e ssh \
+            -o StrictHostKeyChecking=accept-new \
+            '${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}' \
+            'sudo mkdir -p /opt/nextjs-app && sudo chown -R $USER:$USER /opt/nextjs-app'
+
+      # 7. SCP 传输文件
+      - name: SCP Deploy Package
+        run: |
           SSHPASS='${{ secrets.SERVER_PASSWORD }}' sshpass -e scp \
             -o StrictHostKeyChecking=accept-new \
             -r deploy-package/* \
             '${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}':/opt/nextjs-app/
 
+      # 8. SSH 重启服务
+      - name: Restart App
+        run: |
           SSHPASS='${{ secrets.SERVER_PASSWORD }}' sshpass -e ssh \
             -o StrictHostKeyChecking=accept-new \
             '${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}' \
@@ -54,7 +67,7 @@ jobs:
               cd /opt/nextjs-app
 
               if ! command -v pm2 &> /dev/null; then
-                npm install -g pm2
+                sudo npm install -g pm2
               fi
 
               pm2 restart nextjs-app 2>/dev/null || pm2 start server.js --name nextjs-app
