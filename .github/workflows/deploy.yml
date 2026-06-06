@@ -42,32 +42,29 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.SERVER_HOST }}
-          USER: ${{ secrets.SERVER_USERNAME }}
-          PORT: ${{ secrets.SERVER_PORT || 22 }}
+          PORT: ${{ secrets.SERVER_PORT }}
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "$PORT" "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
-          scp -P "$PORT" \
+          scp -P "${PORT:-22}" \
             -i ~/.ssh/deploy_key \
             -o StrictHostKeyChecking=accept-new \
             -r deploy-package/* \
-            $USER@$HOST:/opt/nextjs-app/
+            root@$HOST:/opt/nextjs-app/
 
       # 6. SSH 重启服务
       - name: Restart App on Server
         env:
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.SERVER_HOST }}
-          USER: ${{ secrets.SERVER_USERNAME }}
-          PORT: ${{ secrets.SERVER_PORT || 22 }}
+          PORT: ${{ secrets.SERVER_PORT }}
         run: |
-          ssh -p "$PORT" \
+          ssh -p "${PORT:-22}" \
             -i ~/.ssh/deploy_key \
             -o StrictHostKeyChecking=accept-new \
-            $USER@$HOST \
+            root@$HOST \
             '
               cd /opt/nextjs-app
 
