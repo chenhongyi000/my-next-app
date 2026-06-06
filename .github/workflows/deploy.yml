@@ -36,15 +36,14 @@ jobs:
           mkdir -p deploy-package/.next/static
           cp -r .next/static deploy-package/.next/
           cp -r public deploy-package/ 2>/dev/null || true
-          # standalone 产物已自带 node_modules，无需额外处理
 
-      # 5. 打包并 SCP 传输到服务器
+      # 5. 通过 SSH 密钥传输到服务器
       - name: Deploy Package to Server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT || 22 }}
           source: deploy-package/*
           target: /opt/nextjs-app/
@@ -52,23 +51,21 @@ jobs:
           rm: true
           overwrite: true
 
-      # 6. SSH 到服务器重启服务
+      # 6. SSH 重启服务
       - name: Restart App on Server
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT || 22 }}
           script: |
             cd /opt/nextjs-app
 
-            # 首次部署安装 pm2 进程管理器
             if ! command -v pm2 &> /dev/null; then
               npm install -g pm2
             fi
 
-            # 重启或首次启动（standalone 模式直接 node server.js）
             pm2 restart nextjs-app 2>/dev/null || pm2 start server.js --name nextjs-app
 
             pm2 save
