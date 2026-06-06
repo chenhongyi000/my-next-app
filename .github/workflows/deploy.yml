@@ -37,42 +37,45 @@ jobs:
           cp -r .next/static deploy-package/.next/
           cp -r public deploy-package/ 2>/dev/null || true
 
-      # 5. 写入 SSH 密钥文件
-      - name: Setup SSH Key
+      # 5. 写入 SSH 密钥并传输
+      - name: Deploy Package to Server
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOST: ${{ secrets.SERVER_HOST }}
+          USER: ${{ secrets.SERVER_USERNAME }}
+          PORT: ${{ secrets.SERVER_PORT || 22 }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$PORT" "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
-      # 6. SCP 传输到服务器（用 key_path 替代 key）
-      - name: Deploy Package to Server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ~/.ssh/deploy_key
-          port: ${{ secrets.SERVER_PORT || 22 }}
-          source: deploy-package/*
-          target: /opt/nextjs-app/
-          strip_components: 1
-          rm: true
-          overwrite: true
+          scp -P "$PORT" \
+            -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=accept-new \
+            -r deploy-package/* \
+            $USER@$HOST:/opt/nextjs-app/
 
-      # 7. SSH 重启服务
+      # 6. SSH 重启服务
       - name: Restart App on Server
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          key_path: ~/.ssh/deploy_key
-          port: ${{ secrets.SERVER_PORT || 22 }}
-          script: |
-            cd /opt/nextjs-app
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOST: ${{ secrets.SERVER_HOST }}
+          USER: ${{ secrets.SERVER_USERNAME }}
+          PORT: ${{ secrets.SERVER_PORT || 22 }}
+        run: |
+          ssh -p "$PORT" \
+            -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=accept-new \
+            $USER@$HOST \
+            '
+              cd /opt/nextjs-app
 
-            if ! command -v pm2 &> /dev/null; then
-              npm install -g pm2
-            fi
+              if ! command -v pm2 &> /dev/null; then
+                npm install -g pm2
+              fi
 
-            pm2 restart nextjs-app 2>/dev/null || pm2 start server.js --name nextjs-app
+              pm2 restart nextjs-app 2>/dev/null || pm2 start server.js --name nextjs-app
 
-            pm2 save
+              pm2 save
+            '
