@@ -1,0 +1,64 @@
+{
+  "Metadata": {
+    "title": "Hongyi 的博客",
+    "description": "分享 Web 开发、设计和技术学习的心得。"
+  },
+  "Header": {
+    "siteTitle": "Hongyi 的博客",
+    "subtitle": "分享 Web 开发、设计和技术学习的心得。",
+    "home": "首页",
+    "about": "关于",
+    "archive": "归档",
+    "signIn": "登录"
+  },
+  "Footer": {
+    "copyright": "© {year} Hongyi's Blog. 使用 Next.js 构建。"
+  },
+  "PostList": {
+    "latestPosts": "最新文章"
+  },
+  "Charts": {
+    "dataInsights": "数据洞察",
+    "barChart": "柱状图",
+    "pieChart": "饼图",
+    "lineChart": "折线图",
+    "scatterPlot": "散点图",
+    "barChartAriaLabel": "展示月度收入的柱状图",
+    "pieChartAriaLabel": "展示市场份额分布的饼图",
+    "lineChartAriaLabel": "展示月度访问趋势的折线图",
+    "scatterChartAriaLabel": "展示页面停留时间与转化率关系的散点图",
+    "total": "总计",
+    "visits": "次访问",
+    "timeOnPage": "页面停留时间（秒）",
+    "conversionRate": "转化率（%）",
+    "time": "时间",
+    "rate": "比率",
+    "monthlyRevenue": "月度收入",
+    "marketShare": "市场份额分布",
+    "monthlyTrends": "月度访问趋势",
+    "timeVsConversion": "页面停留时间 vs 转化率"
+  },
+  "Login": {
+    "welcomeBack": "欢迎回来",
+    "signInToContinue": "登录您的账户以继续",
+    "createAccount": "创建账户",
+    "registerToContinue": "填写信息开始使用",
+    "username": "用户名",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "forgotPassword": "忘记密码？",
+    "signIn": "登录",
+    "orContinueWith": "或通过以下方式继续",
+    "google": "Google",
+    "github": "GitHub",
+    "noAccount": "还没有账户？",
+    "hasAccount": "已有账户？",
+    "signUp": "注册",
+    "loginSuccess": "登录成功！"
+  },
+  "LanguageSwitcher": {
+    "toggleLanguage": "切换语言",
+    "en": "English",
+    "zh": "中文"
+  }
+}

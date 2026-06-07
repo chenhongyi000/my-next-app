@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
+import { useTranslations } from "next-intl";
 import type { PieChartDataPoint } from "@/app/_lib/chartTypes";
 
 interface PieChartProps {
@@ -11,6 +12,7 @@ interface PieChartProps {
 }
 
 export default function PieChart({ data, width, height }: PieChartProps) {
+  const t = useTranslations("Charts");
   const svgRef = useRef<SVGSVGElement>(null);
   const [isDark, setIsDark] = useState(false);
 
@@ -96,7 +98,7 @@ export default function PieChart({ data, width, height }: PieChartProps) {
       .attr("fill", foreground)
       .attr("font-size", "14px")
       .attr("font-weight", "500")
-      .text("Total");
+      .text(t("total"));
 
     g.append("text")
       .attr("text-anchor", "middle")
@@ -128,7 +130,7 @@ export default function PieChart({ data, width, height }: PieChartProps) {
         .attr("font-size", "11px")
         .text(d.label);
     });
-  }, [data, width, height, isDark]);
+  }, [data, width, height, isDark, t]);
 
   return (
     <svg
@@ -136,7 +138,7 @@ export default function PieChart({ data, width, height }: PieChartProps) {
       width={width}
       height={height}
       role="img"
-      aria-label="Pie chart showing market share distribution"
+      aria-label={t("pieChartAriaLabel")}
     />
   );
 }

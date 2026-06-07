@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
+import { useTranslations } from "next-intl";
 import type { LineChartDataPoint } from "@/app/_lib/chartTypes";
 
 interface LineChartProps {
@@ -11,6 +12,7 @@ interface LineChartProps {
 }
 
 export default function LineChart({ data, width, height }: LineChartProps) {
+  const t = useTranslations("Charts");
   const svgRef = useRef<SVGSVGElement>(null);
   const [isDark, setIsDark] = useState(false);
 
@@ -176,9 +178,9 @@ export default function LineChart({ data, width, height }: LineChartProps) {
       .append("title")
       .text(
         (d) =>
-          `${d3.timeFormat("%B %Y")(d.date)}: ${d3.format(",")(d.value)} visits`
+          `${d3.timeFormat("%B %Y")(d.date)}: ${d3.format(",")(d.value)} ${t("visits")}`
       );
-  }, [data, width, height, isDark]);
+  }, [data, width, height, isDark, t]);
 
   return (
     <svg
@@ -186,7 +188,7 @@ export default function LineChart({ data, width, height }: LineChartProps) {
       width={width}
       height={height}
       role="img"
-      aria-label="Line chart showing monthly visitor trends"
+      aria-label={t("lineChartAriaLabel")}
     />
   );
 }

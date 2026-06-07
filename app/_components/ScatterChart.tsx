@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
+import { useTranslations } from "next-intl";
 import type { ScatterChartDataPoint } from "@/app/_lib/chartTypes";
 
 interface ScatterChartProps {
@@ -11,6 +12,7 @@ interface ScatterChartProps {
 }
 
 export default function ScatterChart({ data, width, height }: ScatterChartProps) {
+  const t = useTranslations("Charts");
   const svgRef = useRef<SVGSVGElement>(null);
   const [isDark, setIsDark] = useState(false);
 
@@ -122,7 +124,7 @@ export default function ScatterChart({ data, width, height }: ScatterChartProps)
       .attr("fill", foreground)
       .attr("font-size", "13px")
       .attr("font-weight", "500")
-      .text("Time on Page (seconds)");
+      .text(t("timeOnPage"));
 
     g.append("text")
       .attr("transform", "rotate(-90)")
@@ -132,7 +134,7 @@ export default function ScatterChart({ data, width, height }: ScatterChartProps)
       .attr("fill", foreground)
       .attr("font-size", "13px")
       .attr("font-weight", "500")
-      .text("Conversion Rate (%)");
+      .text(t("conversionRate"));
 
     // Scatter points
     g.selectAll(".dot")
@@ -160,8 +162,8 @@ export default function ScatterChart({ data, width, height }: ScatterChartProps)
           .attr("opacity", 0.7);
       })
       .append("title")
-      .text((d) => `Time: ${d.x}s | Rate: ${d.y}%${d.label ? ` (${d.label})` : ""}`);
-  }, [data, width, height, isDark]);
+      .text((d) => `${t("time")}: ${d.x}s | ${t("rate")}: ${d.y}%${d.label ? ` (${d.label})` : ""}`);
+  }, [data, width, height, isDark, t]);
 
   return (
     <svg
@@ -169,7 +171,7 @@ export default function ScatterChart({ data, width, height }: ScatterChartProps)
       width={width}
       height={height}
       role="img"
-      aria-label="Scatter plot showing time on page vs conversion rate"
+      aria-label={t("scatterChartAriaLabel")}
     />
   );
 }

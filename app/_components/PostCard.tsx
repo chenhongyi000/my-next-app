@@ -1,34 +1,52 @@
+"use client";
+
+import { useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import type { Post } from "@/app/_lib/types";
 
 export default function PostCard({ post }: { post: Post }) {
+  const locale = useLocale();
+
   return (
-    <article className="group flex flex-col rounded-2xl border border-zinc-200 bg-white p-6 transition-all hover:shadow-lg hover:shadow-zinc-200/50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:shadow-zinc-950/50">
-      <div className="mb-3 flex flex-wrap gap-2">
-        {post.tags.map((tag) => (
-          <span
-            key={tag}
-            className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-      <h2 className="mb-2 text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
-        <a href={`/posts/${post.slug}`}>{post.title}</a>
-      </h2>
+    <article className="group flex items-start gap-5 py-6 border-b border-zinc-100 last:border-b-0 dark:border-zinc-800 transition-colors">
+      {/* Date on the left */}
       <time
         dateTime={post.date}
-        className="mb-3 text-sm text-zinc-500 dark:text-zinc-500"
+        className="shrink-0 w-28 pt-0.5 text-xs text-zinc-400 dark:text-zinc-500 tabular-nums hidden sm:block"
       >
-        {new Date(post.date).toLocaleDateString("en-US", {
+        {new Date(post.date).toLocaleDateString(locale, {
           year: "numeric",
           month: "long",
           day: "numeric",
         })}
       </time>
-      <p className="line-clamp-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-        {post.excerpt}
-      </p>
+
+      {/* Content on the right */}
+      <div className="flex-1 min-w-0">
+        <h2 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 group-hover:text-primary transition-colors mb-1.5">
+          <Link href={`/posts/${post.id}`} className="hover:underline decoration-1 underline-offset-4">
+            {post.title}
+          </Link>
+        </h2>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400 line-clamp-2 leading-relaxed mb-2">
+          {post.excerpt}
+        </p>
+        <div className="flex items-center gap-3">
+          <div className="flex flex-wrap gap-1.5">
+            {post.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+          <span className="text-xs text-zinc-400 dark:text-zinc-500 ml-auto shrink-0">
+            阅读更多 →
+          </span>
+        </div>
+      </div>
     </article>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import BarChart from "@/app/_components/BarChart";
 import PieChart from "@/app/_components/PieChart";
 import LineChart from "@/app/_components/LineChart";
@@ -13,14 +14,16 @@ import {
 } from "@/app/_lib/chartData";
 import type { ChartTab } from "@/app/_lib/chartTypes";
 
-const TABS: { key: ChartTab; label: string }[] = [
-  { key: "bar", label: "Bar Chart" },
-  { key: "pie", label: "Pie Chart" },
-  { key: "line", label: "Line Chart" },
-  { key: "scatter", label: "Scatter Plot" },
-];
-
 export default function ChartsSection() {
+  const t = useTranslations("Charts");
+
+  const TABS: { key: ChartTab; label: string }[] = [
+    { key: "bar", label: t("barChart") },
+    { key: "pie", label: t("pieChart") },
+    { key: "line", label: t("lineChart") },
+    { key: "scatter", label: t("scatterPlot") },
+  ];
+
   const [activeTab, setActiveTab] = useState<ChartTab>("bar");
   const [containerWidth, setContainerWidth] = useState(0);
 
@@ -39,7 +42,7 @@ export default function ChartsSection() {
   return (
     <section className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
       <h2 className="mb-8 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-        Data Insights
+        {t("dataInsights")}
       </h2>
 
       {/* Tab buttons */}

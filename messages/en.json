@@ -1,0 +1,64 @@
+{
+  "Metadata": {
+    "title": "Hongyi's Blog",
+    "description": "Thoughts on web development, design, and learning."
+  },
+  "Header": {
+    "siteTitle": "Hongyi's Blog",
+    "subtitle": "Thoughts on web development, design, and learning.",
+    "home": "Home",
+    "about": "About",
+    "archive": "Archive",
+    "signIn": "Sign in"
+  },
+  "Footer": {
+    "copyright": "© {year} Hongyi's Blog. Built with Next.js."
+  },
+  "PostList": {
+    "latestPosts": "Latest Posts"
+  },
+  "Charts": {
+    "dataInsights": "Data Insights",
+    "barChart": "Bar Chart",
+    "pieChart": "Pie Chart",
+    "lineChart": "Line Chart",
+    "scatterPlot": "Scatter Plot",
+    "barChartAriaLabel": "Bar chart showing monthly revenue",
+    "pieChartAriaLabel": "Pie chart showing market share distribution",
+    "lineChartAriaLabel": "Line chart showing monthly visitor trends",
+    "scatterChartAriaLabel": "Scatter plot showing time on page vs conversion rate",
+    "total": "Total",
+    "visits": "visits",
+    "timeOnPage": "Time on Page (seconds)",
+    "conversionRate": "Conversion Rate (%)",
+    "time": "Time",
+    "rate": "Rate",
+    "monthlyRevenue": "Monthly Revenue",
+    "marketShare": "Market Share Distribution",
+    "monthlyTrends": "Monthly Visitor Trends",
+    "timeVsConversion": "Time on Page vs Conversion Rate"
+  },
+  "Login": {
+    "welcomeBack": "Welcome back",
+    "signInToContinue": "Sign in to your account to continue",
+    "createAccount": "Create account",
+    "registerToContinue": "Fill in the details to get started",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign in",
+    "orContinueWith": "or continue with",
+    "google": "Google",
+    "github": "GitHub",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUp": "Sign up",
+    "loginSuccess": "Login successful!"
+  },
+  "LanguageSwitcher": {
+    "toggleLanguage": "Switch language",
+    "en": "English",
+    "zh": "中文"
+  }
+}

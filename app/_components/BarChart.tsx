@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
+import { useTranslations } from "next-intl";
 import type { BarChartDataPoint } from "@/app/_lib/chartTypes";
 
 interface BarChartProps {
@@ -11,6 +12,7 @@ interface BarChartProps {
 }
 
 export default function BarChart({ data, width, height }: BarChartProps) {
+  const t = useTranslations("Charts");
   const svgRef = useRef<SVGSVGElement>(null);
   const [isDark, setIsDark] = useState(false);
   useEffect(() => {
@@ -137,7 +139,7 @@ export default function BarChart({ data, width, height }: BarChartProps) {
       width={width}
       height={height}
       role="img"
-      aria-label="Bar chart showing monthly revenue"
+      aria-label={t("barChartAriaLabel")}
     />
   );
 }
