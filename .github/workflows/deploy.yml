@@ -37,6 +37,7 @@ jobs:
           cp -r .next/static deploy-package/.next/
           cp -r public deploy-package/ 2>/dev/null || true
           cp ecosystem.config.js deploy-package/
+          cp nginx-honjee.top.conf deploy-package/
 
       # 5. 安装 sshpass
       - name: Install sshpass
@@ -74,4 +75,17 @@ jobs:
               pm2 restart ecosystem.config.js 2>/dev/null || pm2 start ecosystem.config.js
 
               pm2 save
+
+              # Nginx 配置 (首次部署时安装并配置，后续自动重载)
+              if ! command -v nginx &> /dev/null; then
+                sudo apt-get update -qq && sudo apt-get install -y -qq nginx
+              fi
+
+              sudo cp nginx-honjee.top.conf /etc/nginx/sites-available/honjee.top
+
+              if [ ! -L /etc/nginx/sites-enabled/honjee.top ]; then
+                sudo ln -s /etc/nginx/sites-available/honjee.top /etc/nginx/sites-enabled/
+              fi
+
+              sudo nginx -t && sudo systemctl reload nginx
             '
