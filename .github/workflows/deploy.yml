@@ -36,6 +36,7 @@ jobs:
           mkdir -p deploy-package/.next/static
           cp -r .next/static deploy-package/.next/
           cp -r public deploy-package/ 2>/dev/null || true
+          cp ecosystem.config.js deploy-package/
 
       # 5. 安装 sshpass
       - name: Install sshpass
@@ -70,7 +71,7 @@ jobs:
                 sudo npm install -g pm2
               fi
 
-              pm2 restart nextjs-app 2>/dev/null || pm2 start server.js --name nextjs-app
+              pm2 restart ecosystem.config.js 2>/dev/null || pm2 start ecosystem.config.js
 
               pm2 save
             '
